@@ -13,7 +13,10 @@ interface IContact {
   name: ContactName;
   birthDate?: Date;
   status?: ContactStatus;
-  clone(contact: IContact): IContact;
+}
+
+function clone<T>(source: T): T {
+  return Object.apply({}, source);
 }
 
 enum ContactStatus {
@@ -26,7 +29,7 @@ let primaryContact: IContact = {
   id: 1,
   name: "Sam",
   status: ContactStatus.New,
-  clone: function (contact): IContact {
-    return Object.apply({}, contact);
-  },
 };
+
+const dateRange = { startDate: Date.now(), endDate: Date.now() };
+const dateRangeCopy = clone(dateRange);
