@@ -44,3 +44,6 @@ function getValue<T>(source: T, propertyName: keyof T) {
 }
 
 getValue(primaryContact, "id");
+
+let ctx: Record<string, string | number> = { name: "Bruce Lee" };
+ctx.id = 1234;
