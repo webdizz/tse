@@ -11,13 +11,16 @@ type ContactName = string;
 interface IContact {
   id: number;
   name: ContactName;
-  birthDate?: Date;
+  birthDate?: ContactBirthDate;
   status?: ContactStatus;
 }
 
 function clone<T>(source: T): T {
   return Object.apply({}, source);
 }
+
+type AnotherContactStatus = "active" | "inactive" | "new";
+type ContactBirthDate = Date | number | string;
 
 enum ContactStatus {
   Active = "A",
@@ -33,3 +36,11 @@ let primaryContact: IContact = {
 
 const dateRange = { startDate: Date.now(), endDate: Date.now() };
 const dateRangeCopy = clone(dateRange);
+
+type ContactFields = keyof Contact;
+
+function getValue<T>(source: T, propertyName: keyof T) {
+  return source[propertyName];
+}
+
+getValue(primaryContact, "id");
