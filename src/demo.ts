@@ -48,30 +48,31 @@ getValue(primaryContact, "id");
 let ctx: Record<string, string | number> = { name: "Bruce Lee" };
 ctx.id = 1234;
 
-interface Query {
+interface Query<TProp> {
   sort?: "asc" | "desc";
-  matches(val): boolean;
+  matches(val: TProp): boolean;
 }
 
+type TPropContactQuery = {
+  [TProp in keyof IContact]?: Query<IContact[TProp]>;
+};
+
 type ContactQuery = Omit<
-  Partial<Record<keyof IContact, Query>>,
+  Partial<Record<keyof IContact, Query<IContact>>>,
   "birthDate" | "status"
 >;
 
 type ContactPickQuery = Pick<
-  Partial<Record<keyof IContact, Query>>,
-  "id"|"name"
+  Partial<Record<keyof IContact, Query<IContact>>>,
+  "id" | "name"
 >;
 
-type RequiredContactQuery = Required<ContactQuery>
+type RequiredContactQuery = Required<ContactQuery>;
 
-function searchContacts(
-  contacts: IContact[],
-  query: Record<keyof IContact, ContactQuery>
-) {
+function searchContacts(contacts: IContact[], query: ContactQuery) {
   return contacts.filter((contact) => {
     for (const property of Object.keys(contact)) {
-      const propertyQuery = query[property];
+      const propertyQuery = query[property] as Query<IContact[keyof IContact]>;
       if (propertyQuery && propertyQuery.matches(contact[property])) {
         return true;
       }
@@ -79,5 +80,3 @@ function searchContacts(
     return false;
   });
 }
-
-conts filteredContacts = searchContacts([], {id:{matches:(id)=>id==123}})
